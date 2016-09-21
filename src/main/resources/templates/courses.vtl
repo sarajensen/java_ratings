@@ -1,0 +1,18 @@
+<h1>All Rated Courses</h1>
+
+#if ($success)
+  Thanks for adding $success!
+#end
+
+#if ($courses)
+  #foreach ($course in $courses)
+    <ul>
+      <li><a href="/courses/$course.getId()">$course.getName()</a></li>
+    </ul>
+  #end
+#else
+  No courses have been reviewed yet :(
+#end
+
+<h4>Click <a href="/courses/new">here</a> to add a course</h4>
+<h4><a href="/">Homepage</a></h4>
