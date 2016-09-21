@@ -31,7 +31,7 @@ public class App {
       String courseType = request.queryParams("course-type");
       int skillLevel = Integer.parseInt(request.queryParams("course-skill-level"));
       int initRating = Integer.parseInt(request.queryParams("course-rating"));
-      Course newCourse = new Course(course, courseType, skillLevel);
+      Course newCourse = new Course(course, courseType, skillLevel, 1);
       newCourse.save();
       newCourse.updateAggregate(initRating);
       model.put("courses", Course.all());

@@ -11,7 +11,7 @@ public class CourseTest{
 
   @Before
   public void setUp(){
-    course = new Course("Make a Website", "web development", 1);
+    course = new Course("Make a Website", "web development", 1, 1);
   }
 
   @Test
@@ -47,12 +47,12 @@ public class CourseTest{
 
   @Test
   public void getNumRatings_initiatesProperly_true(){
-    
+
   }
 
   @Test
   public void equals_returnsTrueIfPropertiesAreTheSame_true() {
-    Course secondCourse = new Course("Make a Website", "web development", 1);
+    Course secondCourse = new Course("Make a Website", "web development", 1, 1);
     assertTrue(course.equals(secondCourse));
   }
 
@@ -70,7 +70,7 @@ public class CourseTest{
   @Test
   public void all_returnsAllInstancesOfCourse_true(){
     course.save();
-    Course secondCourse = new Course("Learn Sass", "web development", 2);
+    Course secondCourse = new Course("Learn Sass", "web development", 2, 2);
     secondCourse.save();
     assertTrue(Course.all().contains(course));
     assertTrue(Course.all().contains(secondCourse));
@@ -79,7 +79,7 @@ public class CourseTest{
   @Test
   public void find_returnsCourseWithSameId_secondCourse() {
     course.save();
-    Course secondCourse = new Course("Learn Sass", "web development", 2);
+    Course secondCourse = new Course("Learn Sass", "web development", 2, 2);
     secondCourse.save();
     assertEquals(Course.find(secondCourse.getId()), secondCourse);
   }
@@ -111,5 +111,6 @@ public class CourseTest{
     }
     assertEquals(5, secondCourse.getAggregate(), .01);
   }
+
 
 }

@@ -11,14 +11,16 @@ public class Course{
   private int numRatings;
   private int ratingTotal;
   private int id;
+  private int schoolId;
 
-  public Course(String name, String subject, int skill_level){
+  public Course(String name, String subject, int skill_level, int schoolId){
     this.name = name;
     this.subject = subject;
     this.skill_level = skill_level;
     aggregate = 0;
     numRatings = 0;
     ratingTotal = 0;
+    this.schoolId = schoolId;
   }
 
   public String getName() {
@@ -49,6 +51,10 @@ public class Course{
     return ratingTotal;
   }
 
+  public int getSchoolId() {
+    return schoolId;
+  }
+
   public void updateAggregate(int rating){
     numRatings++;
     ratingTotal+=rating;
@@ -71,13 +77,13 @@ public class Course{
       return false;
     } else {
       Course newCourse = (Course) otherCourse;
-      return this.getName().equals(newCourse.getName()) && this.getSubject().equals(newCourse.getSubject()) && this.getSkillLevel() == newCourse.getSkillLevel() && this.getAggregate() == newCourse.getAggregate();
+      return this.getName().equals(newCourse.getName()) && this.getSubject().equals(newCourse.getSubject()) && this.getSkillLevel() == newCourse.getSkillLevel() && this.getAggregate() == newCourse.getAggregate() && this.getSchoolId() == newCourse.getSchoolId();
     }
 
   }
 
   public void save(){
-    String sql = "INSERT INTO courses (name, subject, skill_level, aggregate, numRatings, ratingTotal) VALUES (:name, :subject, :skill_level, :aggregate, :numRatings, :ratingTotal)";
+    String sql = "INSERT INTO courses (name, subject, skill_level, aggregate, numRatings, ratingTotal, schoolId) VALUES (:name, :subject, :skill_level, :aggregate, :numRatings, :ratingTotal, :schoolId)";
     try(Connection con = DB.sql2o.open()){
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
@@ -86,6 +92,7 @@ public class Course{
         .addParameter("aggregate", this.aggregate)
         .addParameter("numRatings", this.numRatings)
         .addParameter("ratingTotal", this.ratingTotal)
+        .addParameter("schoolId", this.schoolId)
         .executeUpdate()
         .getKey();
     }
