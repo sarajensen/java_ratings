@@ -46,6 +46,11 @@ public class CourseTest{
   }
 
   @Test
+  public void getNumRatings_initiatesProperly_true(){
+    
+  }
+
+  @Test
   public void equals_returnsTrueIfPropertiesAreTheSame_true() {
     Course secondCourse = new Course("Make a Website", "web development", 1);
     assertTrue(course.equals(secondCourse));

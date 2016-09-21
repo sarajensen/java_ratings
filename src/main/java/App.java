@@ -45,5 +45,22 @@ public class App {
       model.put("template", "templates/course-form.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+
+    get("/courses/:id", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Course course = Course.find(Integer.parseInt(request.params("id")));
+      model.put("course", course);
+      model.put("template", "templates/course.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/courses/:id", (request, response) -> {
+      Course course = Course.find(Integer.parseInt(request.params("id")));
+      int rating = Integer.parseInt(request.queryParams("rating"));
+      course.updateAggregate(rating);
+      String url = String.format("/courses/%d", course.getId());
+      response.redirect(url);
+      return null;
+    });
   }
 }

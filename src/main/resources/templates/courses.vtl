@@ -4,7 +4,7 @@
   Thanks for adding $success!
 #end
 
-#if ($courses)
+#if ($courses.size() > 0)
   #foreach ($course in $courses)
     <ul>
       <li><a href="/courses/$course.getId()">$course.getName()</a></li>
@@ -14,5 +14,6 @@
   No courses have been reviewed yet :(
 #end
 
-<h4>Click <a href="/courses/new">here</a> to add a course</h4>
+<h4>Want to review a course that's not on the list? <a href="/courses/new">Click here</a></h4>
+<h4>Not seeing the course you'd like to learn more about? <a href="http://reddit.com">Check out conversations on our forum!</a></h4>
 <h4><a href="/">Homepage</a></h4>

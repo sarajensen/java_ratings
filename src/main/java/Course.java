@@ -8,7 +8,8 @@ public class Course{
   private String subject;
   private int skill_level;
   private float aggregate;
-  private List<Integer> numRatings;
+  private int numRatings;
+  private int ratingTotal;
   private int id;
 
   public Course(String name, String subject, int skill_level){
@@ -16,7 +17,8 @@ public class Course{
     this.subject = subject;
     this.skill_level = skill_level;
     aggregate = 0;
-    numRatings = new ArrayList<Integer>();
+    numRatings = 0;
+    ratingTotal = 0;
   }
 
   public String getName() {
@@ -31,26 +33,37 @@ public class Course{
     return skill_level;
   }
 
-  public float getAggregate() {
-    return aggregate;
-  }
-
   public int getId() {
     return id;
   }
 
+  public float getAggregate() {
+    return aggregate;
+  }
+
+  public int getNumRatings(){
+    return numRatings;
+  }
+
+  public int getRatingTotal() {
+    return ratingTotal;
+  }
+
   public void updateAggregate(int rating){
-    numRatings.add(rating);
-    aggregate = (float) Math.round(numRatings.stream().mapToDouble(r -> r)
-      .average().getAsDouble()*10)/10;
+    numRatings++;
+    ratingTotal+=rating;
+    aggregate = (float) Math.round(((float)ratingTotal/(float)numRatings)*10)/10;
     try(Connection con = DB.sql2o.open()){
-      String sql = "UPDATE courses SET aggregate=:aggregate WHERE id=:id";
+      String sql = "UPDATE courses SET aggregate=:aggregate, numRatings=:numRatings, ratingTotal=:ratingTotal WHERE id=:id";
       con.createQuery(sql)
         .addParameter("aggregate", aggregate)
+        .addParameter("numRatings", numRatings)
+        .addParameter("ratingTotal", ratingTotal)
         .addParameter("id", id)
         .executeUpdate();
     }
   }
+
 
   @Override
   public boolean equals(Object otherCourse) {
@@ -64,13 +77,15 @@ public class Course{
   }
 
   public void save(){
-    String sql = "INSERT INTO courses (name, subject, skill_level, aggregate) VALUES (:name, :subject, :skill_level, :aggregate)";
+    String sql = "INSERT INTO courses (name, subject, skill_level, aggregate, numRatings, ratingTotal) VALUES (:name, :subject, :skill_level, :aggregate, :numRatings, :ratingTotal)";
     try(Connection con = DB.sql2o.open()){
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
         .addParameter("subject", this.subject)
         .addParameter("skill_level", this.skill_level)
         .addParameter("aggregate", this.aggregate)
+        .addParameter("numRatings", this.numRatings)
+        .addParameter("ratingTotal", this.ratingTotal)
         .executeUpdate()
         .getKey();
     }

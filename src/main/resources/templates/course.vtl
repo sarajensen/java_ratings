@@ -1,0 +1,27 @@
+<h1>$course.getName()</h1>
+
+<p>Type: $course.getSubject()</p>
+
+<p>Difficulty: #if ($course.getSkillLevel() == 1) Beginner
+#elseif($course.getSkillLevel()==2) Intermediate
+#elseif($course.getSkillLevel()==3) Advanced
+#else Expert
+#end
+</p>
+
+<p>Rating: $course.getAggregate() stars/Out of 5 stars (based on $course.getNumRatings() total review(s))</p>
+
+<form action="/courses/$course.getId()" method="post">
+  <label for="rating">Add your rating:</label>
+  <select name="rating">
+    <option value="1">1 star</option>
+    <option value="2">2 star</option>
+    <option value="3">3 star</option>
+    <option value="4">4 star</option>
+    <option value="5">5 star</option>
+  </select>
+  <button type="submit" class="btn btn-primary">Add Review</button>
+</form>
+
+<a href="/courses">Back to courses</a><br>
+<a href="/">Homepage</a>
