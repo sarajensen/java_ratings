@@ -15,6 +15,7 @@ import org.sql2o.*;
 //TODO: text reviews for courses and schools (add a field for a username to ratings table) ...datestamp? (check Karen's stuff/hw) NOOOOOOOO
 //TODO: prepopulate some schools and courses?
 //TODO: add users/user accounts
+//TODO: limit reviews somehow
 
 public class App {
   public static void main(String[] args) {
