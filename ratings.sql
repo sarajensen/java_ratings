@@ -2,16 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.1
--- Dumped by pg_dump version 9.5.1
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET row_security = off;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -34,7 +30,41 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: courses; Type: TABLE; Schema: public; Owner: Guest
+-- Name: course_ratings; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
+--
+
+CREATE TABLE course_ratings (
+    id integer NOT NULL,
+    course_id integer,
+    rating integer
+);
+
+
+ALTER TABLE course_ratings OWNER TO "Guest";
+
+--
+-- Name: course_ratings_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
+--
+
+CREATE SEQUENCE course_ratings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE course_ratings_id_seq OWNER TO "Guest";
+
+--
+-- Name: course_ratings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
+--
+
+ALTER SEQUENCE course_ratings_id_seq OWNED BY course_ratings.id;
+
+
+--
+-- Name: courses; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE courses (
@@ -42,9 +72,6 @@ CREATE TABLE courses (
     name character varying,
     subject character varying,
     skill_level integer,
-    aggregate numeric(2,1),
-    numratings integer,
-    ratingtotal integer,
     schoolid integer
 );
 
@@ -73,7 +100,43 @@ ALTER SEQUENCE courses_id_seq OWNED BY courses.id;
 
 
 --
--- Name: schools; Type: TABLE; Schema: public; Owner: Guest
+-- Name: school_ratings; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
+--
+
+CREATE TABLE school_ratings (
+    id integer NOT NULL,
+    school_id integer,
+    culture_rating integer,
+    value_rating integer,
+    ux_rating integer
+);
+
+
+ALTER TABLE school_ratings OWNER TO "Guest";
+
+--
+-- Name: school_ratings_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
+--
+
+CREATE SEQUENCE school_ratings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE school_ratings_id_seq OWNER TO "Guest";
+
+--
+-- Name: school_ratings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
+--
+
+ALTER SEQUENCE school_ratings_id_seq OWNED BY school_ratings.id;
+
+
+--
+-- Name: schools; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE schools (
@@ -82,8 +145,7 @@ CREATE TABLE schools (
     offline boolean,
     coding_only boolean,
     paid boolean,
-    url character varying,
-    aggregate_score numeric(2,1)
+    url character varying
 );
 
 
@@ -114,7 +176,21 @@ ALTER SEQUENCE schools_id_seq OWNED BY schools.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
 --
 
+ALTER TABLE ONLY course_ratings ALTER COLUMN id SET DEFAULT nextval('course_ratings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
+--
+
 ALTER TABLE ONLY courses ALTER COLUMN id SET DEFAULT nextval('courses_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
+--
+
+ALTER TABLE ONLY school_ratings ALTER COLUMN id SET DEFAULT nextval('school_ratings_id_seq'::regclass);
 
 
 --
@@ -125,12 +201,27 @@ ALTER TABLE ONLY schools ALTER COLUMN id SET DEFAULT nextval('schools_id_seq'::r
 
 
 --
+-- Data for Name: course_ratings; Type: TABLE DATA; Schema: public; Owner: Guest
+--
+
+COPY course_ratings (id, course_id, rating) FROM stdin;
+6	10	3
+\.
+
+
+--
+-- Name: course_ratings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
+--
+
+SELECT pg_catalog.setval('course_ratings_id_seq', 6, true);
+
+
+--
 -- Data for Name: courses; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY courses (id, name, subject, skill_level, aggregate, numratings, ratingtotal, schoolid) FROM stdin;
-4	Make a Website!	Front End	1	2.5	4	10	\N
-5	Python Basics	Back End	1	4.0	1	4	1
+COPY courses (id, name, subject, skill_level, schoolid) FROM stdin;
+10	Java Basics	Back End	1	5
 \.
 
 
@@ -138,14 +229,31 @@ COPY courses (id, name, subject, skill_level, aggregate, numratings, ratingtotal
 -- Name: courses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('courses_id_seq', 5, true);
+SELECT pg_catalog.setval('courses_id_seq', 10, true);
+
+
+--
+-- Data for Name: school_ratings; Type: TABLE DATA; Schema: public; Owner: Guest
+--
+
+COPY school_ratings (id, school_id, culture_rating, value_rating, ux_rating) FROM stdin;
+4	5	3	4	5
+\.
+
+
+--
+-- Name: school_ratings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
+--
+
+SELECT pg_catalog.setval('school_ratings_id_seq', 4, true);
 
 
 --
 -- Data for Name: schools; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY schools (id, name, offline, coding_only, paid, url, aggregate_score) FROM stdin;
+COPY schools (id, name, offline, coding_only, paid, url) FROM stdin;
+5	Team Treehouse	f	f	t	https://teamtreehouse.com/
 \.
 
 
@@ -153,11 +261,19 @@ COPY schools (id, name, offline, coding_only, paid, url, aggregate_score) FROM s
 -- Name: schools_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('schools_id_seq', 1, false);
+SELECT pg_catalog.setval('schools_id_seq', 5, true);
 
 
 --
--- Name: courses_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
+-- Name: course_ratings_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
+--
+
+ALTER TABLE ONLY course_ratings
+    ADD CONSTRAINT course_ratings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: courses_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY courses
@@ -165,7 +281,15 @@ ALTER TABLE ONLY courses
 
 
 --
--- Name: schools_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
+-- Name: school_ratings_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
+--
+
+ALTER TABLE ONLY school_ratings
+    ADD CONSTRAINT school_ratings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schools_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY schools
