@@ -34,20 +34,15 @@ public class CourseTest{
     assertEquals(1, course.getSkillLevel());
   }
 
-  @Test
-  public void getAggregate_returnsAggregateOfCourse_Float() {
-    assertEquals(0, course.getAggregate(), 0.001);
-  }
+  // @Test
+  // public void getAggregate_returnsAggregateOfCourse_Float() {
+  //   assertEquals(0, course.getAggregate(), 0.001);
+  // }
 
   @Test
   public void getId_returnsIdOfCourse_true() {
     course.save();
     assertTrue(course.getId() > 0);
-  }
-
-  @Test
-  public void getNumRatings_initiatesProperly_true(){
-
   }
 
   @Test
@@ -85,32 +80,44 @@ public class CourseTest{
   }
 
   @Test
-  public void updateAggregate_returnsUpdatedAggregate_true(){
-    course.updateAggregate(5);
-    assertEquals(5, course.getAggregate(), .01);
-  }
-
-  @Test
-  public void updateAggregate_updatesAggregateAverageProperly_true(){
-    course.updateAggregate(5);
-    course.updateAggregate(3);
-    course.updateAggregate(3);
-    assertEquals(3.7, course.getAggregate(), .01);
-  }
-
-  @Test
-  public void updateAggregate_updatesAggregateInDatabase_true(){
+  public void saveRating_savesRating_true(){
     course.save();
-    course.updateAggregate(5);
-    String sql = "SELECT * FROM courses WHERE id=:id";
-    Course secondCourse;
+    course.saveRating(3);
+    String sql = "SELECT rating FROM course_ratings WHERE course_id=:id";
+    Integer output;
     try(Connection con = DB.sql2o.open()){
-      secondCourse = con.createQuery(sql)
-      .addParameter("id", course.getId())
-      .executeAndFetchFirst(Course.class);
+      output = con.createQuery(sql).addParameter("id", course.getId()).executeScalar(Integer.class);
     }
-    assertEquals(5, secondCourse.getAggregate(), .01);
+    assertEquals((int) 3, (int) output);
   }
+
+  // @Test
+  // public void getAverage_returnsUpdatedAggregate_true(){
+  //   course.getAverage(5);
+  //   assertEquals(5, course.getAggregate(), .01);
+  // }
+  //
+  // @Test
+  // public void getAverage_updatesAggregateAverageProperly_true(){
+  //   course.getAverage(5);
+  //   course.getAverage(3);
+  //   course.getAverage(3);
+  //   assertEquals(3.7, course.getAggregate(), .01);
+  // }
+  //
+  // @Test
+  // public void getAverage_updatesAggregateInDatabase_true(){
+  //   course.save();
+  //   course.getAverage(5);
+  //   String sql = "SELECT * FROM courses WHERE id=:id";
+  //   Course secondCourse;
+  //   try(Connection con = DB.sql2o.open()){
+  //     secondCourse = con.createQuery(sql)
+  //     .addParameter("id", course.getId())
+  //     .executeAndFetchFirst(Course.class);
+  //   }
+  //   assertEquals(5, secondCourse.getAggregate(), .01);
+  // }
 
 
 }

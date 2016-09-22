@@ -1,6 +1,6 @@
 <h1>$course.getName()</h1>
-
-<p>Type: $course.getSubject()</p>
+<h2>Type: $course.getSubject()</h2>
+<h3>School: <a href="/schools/$school.getId()">$school.getName()</a></h3>
 
 <p>Difficulty: #if ($course.getSkillLevel() == 1) Beginner
 #elseif($course.getSkillLevel()==2) Intermediate
@@ -11,7 +11,7 @@
 
 <p>Rating: $course.getAggregate() stars/Out of 5 stars (based on $course.getNumRatings() total review(s))</p>
 
-<form action="/courses/$course.getId()" method="post">
+<form action="/schools/$school.getId()/courses/$course.getId()" method="post">
   <label for="rating">Add your rating:</label>
   <select name="rating">
     <option value="1">1 star</option>
@@ -23,5 +23,6 @@
   <button type="submit" class="btn btn-primary">Add Review</button>
 </form>
 
+<a href="/schools/$school.getId()">Back to $school.getName()</a><br>
 <a href="/courses">Back to courses</a><br>
 <a href="/">Homepage</a>

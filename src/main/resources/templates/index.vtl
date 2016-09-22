@@ -1,4 +1,22 @@
 <h1>Rate Code Learny Site Things!</h1>
+#if ($success)
+  <p>Thanks for adding $success!</p>
+#end
+<div class="header">
+  <a href="/courses">See all courses</a><br>
+  <a href="/schools/new">Don't see your school? Add it here!</a>
+</div>
 
-<a href="/courses">See all courses</a><br>
-<a href="/courses/new">Add new course</a>
+#if ($schools.size() > 0)
+  #foreach ($school in $schools)
+  <div class="school">
+    <h3><a href="/schools/$school.getId()">$school.getName()</a></h3>
+    <p>Culture score: $school.getCultureRating()</p>
+    <p>User Experience score: $school.getUXRating()</p>
+    <p>Overall value score: $school.getValueRating()</p>
+    <a href="/schools/$school.getId()">See courses</a>
+  </div>
+  #end
+#else
+  No schools yet :(
+#end

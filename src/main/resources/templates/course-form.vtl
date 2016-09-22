@@ -1,6 +1,16 @@
 <h1>Add a Course</h1>
 
-<form action="/courses" method="post">
+<form action="$post-url" method="post">
+  #if($schoolid)
+  <input name="schoolid" type="hidden" value="$schoolid">
+  #else
+  <label for="schoolid">Where can you take this course?</label>
+  <select name="schoolid">
+    #foreach($school in $schools)
+      <option value="$school.getId()">$school.getName()</option>
+    #end
+  </select>
+  #end
   <label for="course">Course Name</label>
   <input type="text" name="course">
   <select name="course-type">

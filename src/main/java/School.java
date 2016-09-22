@@ -59,7 +59,7 @@ public class School{
   }
 
   public void save(){
-    String sql = "INSERT INTO schools (name, offline, coding_only, paid, url, aggregate_score) VALUES (:name, :offline, :coding_only, :paid, :url, :aggregate_score)";
+    String sql = "INSERT INTO schools (name, offline, coding_only, paid, url) VALUES (:name, :offline, :coding_only, :paid, :url)";
     try(Connection con = DB.sql2o.open()){
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
@@ -67,7 +67,6 @@ public class School{
         .addParameter("coding_only", this.coding_only)
         .addParameter("paid", this.paid)
         .addParameter("url", this.url)
-        .addParameter("aggregate_score", this.aggregate_score)
         .executeUpdate()
         .getKey();
     }

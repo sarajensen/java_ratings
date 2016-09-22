@@ -1,0 +1,26 @@
+<h1>$school.getName()</h1>
+<h2><a href="$school.getUrl">Go to website</a></h2>
+#if ($success)
+  Thanks for adding $success!
+#end
+
+<p>Has offline component: $school.isOffline()</p>
+<p>Only coding related: $school.isCodingOnly()</p>
+<p>May require money at some point: $school.isPaid()</p>
+<p>Culture score: $school.getCultureRating()</p>
+<p>User Experience score: $school.getUXRating()</p>
+<p>Overall value score: $school.getValueRating()</p>
+<h3>Courses at $school.getName()</h3>
+#if ($courses.size() > 0)
+  #foreach ($course in $courses)
+    <ul>
+      <li><a href="/schools/$school.getId()/courses/$course.getId()">$course.getName()</a> $course.getAggregate() stars</li>
+    </ul>
+  #end
+#else
+  No courses have been reviewed yet :(
+#end
+
+<h4>Want to review a course that's not on the list? <a href="/schools/$school.getId()/courses/new">Click here</a></h4>
+<h4>Not seeing the course you'd like to learn more about? <a href="http://reddit.com">Check out conversations on our forum!</a></h4>
+<h4><a href="/">Homepage</a></h4>
