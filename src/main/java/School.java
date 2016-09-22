@@ -98,4 +98,41 @@ public class School{
     }
   }
 
+  public void saveRatings(int rating, int otherRating, int thirdRating){
+    try(Connection con = DB.sql2o.open()){
+      String sql = "INSERT INTO school_ratings (school_id, culture_rating, value_rating, ux_rating) VALUES (:school_id, :culture_rating, :value_rating, :ux_rating)";
+      con.createQuery(sql)
+        .addParameter("school_id", this.id)
+        .addParameter("culture_rating", rating)
+        .addParameter("value_rating", otherRating)
+        .addParameter("ux_rating", thirdRating)
+        .executeUpdate();
+    }
+  }
+
+  public List<Float> getAverages() {
+    String[] ratingWords = {"culture", "value", "ux"};
+    List<Float> averageSchoolRatingsArray = new ArrayList<Float>();
+    try(Connection con = DB.sql2o.open()){
+      for(int i = 0; i < ratingWords.length; i++){
+        String sqlString = "SELECT " + ratingWords[i]+ "_rating FROM school_ratings WHERE school_id=:school_id";
+        List<Integer> ratingCount = con.createQuery(sqlString)
+          .addParameter("school_id", id)
+          .executeAndFetch(Integer.class);
+        float average = (float) Math.round(ratingCount.stream().mapToDouble(r -> r)
+        .average().getAsDouble()*10)/10;
+        averageSchoolRatingsArray.add(average);
+      }
+      return averageSchoolRatingsArray;
+    }
+  }
+
+  public int getNumRatings(){
+    String sql = "SELECT count(id) FROM school_ratings WHERE school_id=:school_id";
+    try (Connection con = DB.sql2o.open()) {
+        return con.createQuery(sql)
+        .addParameter("school_id", id)
+        .executeScalar(Integer.class);
+    }
+  }
 }

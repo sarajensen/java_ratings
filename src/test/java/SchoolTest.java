@@ -71,4 +71,40 @@ public class SchoolTest{
     assertTrue(school.getCourses().containsAll(Arrays.asList(courses)));
   }
 
+  @Test
+  public void saveRatings_savesCultureValueAndUXRatingsIntoDatabase_true(){
+    school.save();
+    school.saveRatings(3, 4, 5);
+    String sqlCulture = "SELECT culture_rating FROM school_ratings WHERE school_id=:id";
+    String sqlValue = "SELECT value_rating FROM school_ratings WHERE school_id=:id";
+    String sqlUX = "SELECT ux_rating FROM school_ratings WHERE school_id=:id";
+    Integer outputCulture;
+    Integer outputValue;
+    Integer outputUX;
+    try(Connection con = DB.sql2o.open()){
+      outputCulture = con.createQuery(sqlCulture).addParameter("id", school.getId()).executeScalar(Integer.class);
+      outputValue = con.createQuery(sqlValue).addParameter("id", school.getId()).executeScalar(Integer.class);
+      outputUX = con.createQuery(sqlUX).addParameter("id", school.getId()).executeScalar(Integer.class);
+    }
+    assertEquals((int) 3, (int) outputCulture);
+    assertEquals((int) 4, (int) outputValue);
+    assertEquals((int) 5, (int) outputUX);
+  }
+
+  @Test
+  public void getAverage_returnsArrayOfCultureValueAndUXRatings_Array(){
+    school.save();
+    school.saveRatings(2, 3, 1);
+    school.saveRatings(4, 5, 2);
+    Float[] schoolRatings = new Float[] {3.0f, 4.0f, 1.5f};
+    assertTrue(school.getAverages().containsAll(Arrays.asList(schoolRatings)));
+  }
+
+  @Test
+  public void getNumRatings_returnsArrayOfTheNumberOfCultureValueAndUXRatings_int(){
+    school.save();
+    school.saveRatings(2, 3, 1);
+    school.saveRatings(4, 5, 2);
+    assertEquals(2, school.getNumRatings());
+  }
 }

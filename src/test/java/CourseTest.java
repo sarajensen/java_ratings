@@ -91,33 +91,21 @@ public class CourseTest{
     assertEquals((int) 3, (int) output);
   }
 
-  // @Test
-  // public void getAverage_returnsUpdatedAggregate_true(){
-  //   course.getAverage(5);
-  //   assertEquals(5, course.getAggregate(), .01);
-  // }
-  //
-  // @Test
-  // public void getAverage_updatesAggregateAverageProperly_true(){
-  //   course.getAverage(5);
-  //   course.getAverage(3);
-  //   course.getAverage(3);
-  //   assertEquals(3.7, course.getAggregate(), .01);
-  // }
-  //
-  // @Test
-  // public void getAverage_updatesAggregateInDatabase_true(){
-  //   course.save();
-  //   course.getAverage(5);
-  //   String sql = "SELECT * FROM courses WHERE id=:id";
-  //   Course secondCourse;
-  //   try(Connection con = DB.sql2o.open()){
-  //     secondCourse = con.createQuery(sql)
-  //     .addParameter("id", course.getId())
-  //     .executeAndFetchFirst(Course.class);
-  //   }
-  //   assertEquals(5, secondCourse.getAggregate(), .01);
-  // }
+  @Test
+  public void getAverage_returnsAverageOfAllCourseRatings_true(){
+    course.save();
+    course.saveRating(3);
+    course.saveRating(3);
+    course.saveRating(5);
+    assertEquals(3.7, course.getAverage(), .01);
+  }
 
-
+  @Test
+  public void getNumRatings_returnsTotalNumberOfRatingsByCourseId_int() {
+    course.save();
+    course.saveRating(3);
+    course.saveRating(3);
+    course.saveRating(5);
+    assertEquals(3, course.getNumRatings());
+  }
 }

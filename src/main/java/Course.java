@@ -38,28 +38,34 @@ public class Course{
   }
 
   public void saveRating(int rating){
-
+    try(Connection con = DB.sql2o.open()){
+      String sql = "INSERT INTO course_ratings (course_id, rating) VALUES (:course_id, :rating)";
+      con.createQuery(sql).addParameter("course_id", this.id)
+        .addParameter("rating", rating).executeUpdate();
+    }
   }
 
-  // public float getAverage(){
-  //   numRatings++;
-  //   ratingTotal+=rating;
-  //   aggregate = (float) Math.round(((float)ratingTotal/(float)numRatings)*10)/10;
-  //   try(Connection con = DB.sql2o.open()){
-  //     String sql = "UPDATE courses SET aggregate=:aggregate, numRatings=:numRatings, ratingTotal=:ratingTotal WHERE id=:id";
-  //     con.createQuery(sql)
-  //       .addParameter("aggregate", aggregate)
-  //       .addParameter("numRatings", numRatings)
-  //       .addParameter("ratingTotal", ratingTotal)
-  //       .addParameter("id", id)
-  //       .executeUpdate();
-  //   }
-  // }
+  public float getAverage(){
+    //aggregate = (float) Math.round(((float)ratingTotal/(float)numRatings)*10)/10;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "SELECT rating FROM course_ratings WHERE course_id=:course_id";
+      List<Integer> ratingCount = con.createQuery(sql)
+        .addParameter("course_id", id)
+        .executeAndFetch(Integer.class);
+      float average = (float) Math.round(ratingCount.stream().mapToDouble(r -> r)
+      .average().getAsDouble()*10)/10;
+      return average;
+    }
+  }
 
   public int getNumRatings(){
-    return 0;
+    String sql = "SELECT count(id) FROM course_ratings WHERE course_id=:course_id";
+    try (Connection con = DB.sql2o.open()) {
+        return con.createQuery(sql)
+        .addParameter("course_id", id)
+        .executeScalar(Integer.class);
+    }
   }
-
 
   @Override
   public boolean equals(Object otherCourse) {
